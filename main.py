@@ -1,7 +1,8 @@
-import pandas as pd
 """
 最初のコード
 """
+import pandas as pd
+import time
 
 
 def keyerror(group_df_x, i, j):
@@ -51,6 +52,7 @@ def distance(infile, outfile):
 
 
 if __name__ == '__main__':
+    start = time.time()
     distance('input_0.csv', 'solution_yours_0.csv')
     distance('input_1.csv', 'solution_yours_1.csv')
     distance('input_2.csv', 'solution_yours_2.csv')
@@ -58,3 +60,5 @@ if __name__ == '__main__':
     distance('input_4.csv', 'solution_yours_4.csv')
     distance('input_5.csv', 'solution_yours_5.csv')
     distance('input_6.csv', 'solution_yours_6.csv')
+    elapsed_time = time.time() - start
+    print("elapsed_time:{0}".format(elapsed_time) + "[sec]")

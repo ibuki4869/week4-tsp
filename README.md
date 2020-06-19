@@ -2,6 +2,12 @@ Build@Mercari 2020 Week4 - Travelling Salesman PRoblem Challenges.
 
 This is forked from [https://github.com/hayatoito/google-step-tsp-2016](https://github.com/hayatoito/google-step-tsp-2016).
 
+1回目：クネクネで最短距離を目指す
+main.py
+座標を0.01倍し、intにすることで、近い座標をひとまとめにした。あとはまとめたグループごとに向きを決めて、ソートしただけ。
+極めて単純だが、greedyよりも距離が短い場合もあったので、改善すればもう少し短くなりそうだなと思ったが、違う案を思いついたため、とりあえずこの案はここまで。
+
+
 1. 問題
 [巡回セールスマン問題](https://ja.wikipedia.org/wiki/%E5%B7%A1%E5%9B%9E%E3%82%BB%E3%83%BC%E3%83%AB%E3%82%B9%E3%83%9E%E3%83%B3%E5%95%8F%E9%A1%8C) を解くアルゴリズムを考えてください。
 

@@ -1,4 +1,7 @@
 import pandas as pd
+"""
+最初のコード
+"""
 
 
 def keyerror(group_df_x, i, j):

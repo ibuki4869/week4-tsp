@@ -41,10 +41,10 @@ def improve_with_2opt(visit_order, distance_matrix):
     i_best, j_best = None, None
 
     for i in range(0, n_cities - 2):
-        if i > 513:
+        if i > 600:
             break
         for j in range(i + 2, n_cities):
-            if j > 513:
+            if j > 600:
                 break
             if i == 0 and j == n_cities - 1:
                 continue
@@ -112,6 +112,7 @@ def multi_start(N_START, infile, outfile):
     df_dist = np.sqrt(df_dist)
     distance_matrix = df_dist.values
     N = len(df)
+    rtimes = int(N/N_START)
     order_best = None
     score_best = sys.float_info.max
     order_random = solve(df_dist)
@@ -124,9 +125,8 @@ def multi_start(N_START, infile, outfile):
             score_best = score
             order_best = order_improved
             order_random = order_best
-        if i < N:
-            order_random = list(np.roll(order_random, 1))
-        else:
+        order_random = list(np.roll(order_random, rtimes))
+        if i > N:
             order_random = list(np.random.permutation(N))
 
     with open(outfile, 'w') as f:

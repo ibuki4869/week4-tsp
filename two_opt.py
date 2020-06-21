@@ -123,7 +123,10 @@ def multi_start(N_START, infile, outfile):
         if score < score_best:
             score_best = score
             order_best = order_improved
-        if i > N:
+            order_random = order_best
+        if i < N:
+            order_random = list(np.roll(order_random, 1))
+        else:
             order_random = list(np.random.permutation(N))
 
     with open(outfile, 'w') as f:

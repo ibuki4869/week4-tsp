@@ -115,9 +115,7 @@ def multi_start(N_START, infile, outfile):
     order_best = None
     score_best = sys.float_info.max
     order_random = solve(df_dist)
-    i = 0
-    for _ in range(N_START):
-        i += 1
+    for i in range(N_START):
         order_improved = local_search(
             order_random, distance_matrix, improve_with_2opt)
         score = calculate_total_distance(order_improved, distance_matrix)
@@ -125,8 +123,7 @@ def multi_start(N_START, infile, outfile):
         if score < score_best:
             score_best = score
             order_best = order_improved
-            order_random = order_best
-        if len(df) < 65:
+        if i > N:
             order_random = list(np.random.permutation(N))
 
     with open(outfile, 'w') as f:
@@ -138,18 +135,18 @@ def multi_start(N_START, infile, outfile):
 if __name__ == '__main__':
     start = time.time()
     print('0')
-    multi_start(100, 'input_0.csv', 'solution_yours_0.csv')
+    multi_start(200, 'input_0.csv', 'solution_yours_0.csv')
     print('1')
-    multi_start(100, 'input_1.csv', 'solution_yours_1.csv')
+    multi_start(200, 'input_1.csv', 'solution_yours_1.csv')
     print('2')
-    multi_start(100, 'input_2.csv', 'solution_yours_2.csv')
+    multi_start(200, 'input_2.csv', 'solution_yours_2.csv')
     print('3')
-    multi_start(100, 'input_3.csv', 'solution_yours_3.csv')
+    multi_start(200, 'input_3.csv', 'solution_yours_3.csv')
     print('4')
-    multi_start(100, 'input_4.csv', 'solution_yours_4.csv')
+    multi_start(200, 'input_4.csv', 'solution_yours_4.csv')
     print('5')
-    multi_start(100, 'input_5.csv', 'solution_yours_5.csv')
+    multi_start(200, 'input_5.csv', 'solution_yours_5.csv')
     print('6')
-    multi_start(100, 'input_6.csv', 'solution_yours_6.csv')
+    multi_start(200, 'input_6.csv', 'solution_yours_6.csv')
     elapsed_time = time.time() - start
     print("elapsed_time:{0}".format(elapsed_time) + "[sec]")

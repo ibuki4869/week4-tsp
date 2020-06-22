@@ -6,7 +6,7 @@ Build@Mercari 2020 Week4 - Travelling Salesman PRoblem Challenges.
 
 [scoreboard]: https://docs.google.com/spreadsheets/d/1t4ScULZ7aZpDJL8i9AVFQfqL7sErjT5i3cmC1G5ecR8/edit?usp=sharing
 
-<h4>アルゴリズム　</h4>
+<h4>アルゴリズム　two_opt.py</h4>
 
 2-opt法とgreedyを用いた。  
 [参考文献]を見て、2-opt法でまずは書いてみようと思ったが、参考文献のコードをそのまま用いると、計算量が大きすぎてN=2048に対応できなかったため、頂いていたgreedyを同時に用いることにした。  

@@ -1,151 +1,34 @@
 Build@Mercari 2020 Week4 - Travelling Salesman PRoblem Challenges.
 
-This is forked from [https://github.com/hayatoito/google-step-tsp-2016](https://github.com/hayatoito/google-step-tsp-2016).
-
-1回目：クネクネで最短距離を目指す  
-main.py  
-座標を0.01倍し、intにすることで、近い座標をひとまとめにした。あとはまとめたグループごとに向きを決めて、ソートしただけ。
-極めて単純だが、greedyよりも距離が短い場合もあったので、改善すればもう少し短くなりそうだなと思ったが、違う案を思いついたため、とりあえずこの案はここまで。  
-
-
-1. 問題
-[巡回セールスマン問題](https://ja.wikipedia.org/wiki/%E5%B7%A1%E5%9B%9E%E3%82%BB%E3%83%BC%E3%83%AB%E3%82%B9%E3%83%9E%E3%83%B3%E5%95%8F%E9%A1%8C) を解くアルゴリズムを考えてください。
-
-2. 課題
-----
-このrepositoryを自分のgithubにforkして使ってください。
-N = 5 から N = 2048までの７つの課題があります。
-
-| Challenge    | N (= the number of cities) | Input file  | Output (Solution) file |
-| ------------ | -------------------------: | ----------- | ---------------------- |
-| Challenge 0  |                          5 | input_0.csv | solution_yours_0.csv   |
-| Challenge 1  |                          8 | input_1.csv | solution_yours_1.csv   |
-| Challenge 2  |                         16 | input_2.csv | solution_yours_2.csv   |
-| Challenge 3  |                         64 | input_3.csv | solution_yours_3.csv   |
-| Challenge 4  |                        128 | input_4.csv | solution_yours_4.csv   |
-| Challenge 5  |                        512 | input_5.csv | solution_yours_5.csv   |
-| Challenge 6  |                       2048 | input_6.csv | solution_yours_6.csv   |
-
-inputとoutputの形式については *3. Data Format Specification* を見てください。
-### Your tasks
-
 * 巡回セールスマン問題をとくアルゴリズムを考えて実装してください。
 * `solution_yours_{0-6}.csv` をあなたのアルゴリズムでといた結果で上書きしてください。
 * あなたの解法の*path length*を[scoreboard]に書いてください
 
 [scoreboard]: https://docs.google.com/spreadsheets/d/1t4ScULZ7aZpDJL8i9AVFQfqL7sErjT5i3cmC1G5ecR8/edit?usp=sharing
-### An optional task (Speed challenge)
 
-What matters in this optional task is your program's *speed* (execution time). The path length does not matter as long as it meets the condition.
-Your task is:
+<h4>アルゴリズム</h4>
 
-* Given `input_6.csv`, write a program which outputs a path shorter than `47,000`
+2-opt法とgreedyを用いた。  
+[参考文献]を見て、2-opt法でまずは書いてみようと思ったが、参考文献のコードをそのまま用いると、計算量が大きすぎてN=2048に対応できなかったため、頂いていたgreedyを同時に用いることにした。  
+2-opt近傍は「初期経路をrandomで与え、2つの経路を入れ替えていくことで最短経路を見つける」というものだ。しかし、入れ替える作業が多いほど計算時間が長くなるため、初期経路をrandomで与えたり、Nが大きくなったりすると計算までにとても時間を要する。  
+まず、初期経路をrandomにすることによる計算量を初期経路にgreedyを与えることで改善させた。greedyの結果を用いると、すでにある程度交差の少ない経路になっているため、入れ替える回数がrandomの経路よりも格段に少なくなる。  
+次に、Nが大きくなる時の計算量に関しては、N=512まででは全ての入れ替えパターンを実行するようにしているが、N=2048は経路の頭の0から1000の間で入れ替えるパターンを考えさせ、経路の頭の位置を変えてもう一度2-opt法を行うというのを繰り返すようにした。この1000という値については根拠があるものではなく、考察の余地がある。  
 
-Input your program's execution time in the [scoreboard]. Faster (smaller) is better.
 
-You can measure the execution time by `time` command.
+<h4>改善したい点</h4>
 
-```shellsession
-$ time yourprogram input_6.csv solution_yours_6.csv
-2.96s user 0.07s system 97% cpu 3.116 total
-```
+ここで、2-opt法は初期値に依存することについて触れておく。2-opt法は2つの経路を入れ替えるだけなので、クロスがない経路に2-opt法を用いても距離は変わらない。  
+それ故、初期値を最短距離の解に近いものにするべきなのだが、greedyがあまり良くないので、randomで計算できるN=128まではrandomで計算した。そのため、毎回結果が変わるNが存在する。これをrandomにせず、greedyと他のアルゴリズムでいくつかの初期値を与えて、それらを2-opt法で改善させたときに、最も短いものを結果にするなどの工夫をすると、よりよくなると考えられる。
 
-In this case, your score is `3.116` (s).
+また、入れ替える経路のパターンについてだが、最短距離を考える以上、真反対の点が繋がることがないため、全てのパターンを考える必要がない。もし、このパターンを少なくすることができれば、より早く、N=2048に関してはより短距離な結果を出せるようになると考えられる。
 
-### Visualizer
+表：N=2048で2-opt法を用いた時の入れ替えパターンを考える範囲と計算時間と距離（繰り返し200回）
 
-The demo page of the visualizer is:
-https://mercari-build.github.io/week4-tsp/visualizer/.
+|入れ替えるデータ数| 500| 600 | 700 | 1000 |
+| :---: | :---: | :---: | :---: | :---: |
+| 計算時間[sec]| 179.6971 | 256.5885 | 352.5641 | 809.2435 |
+| 距離 [m] | 44246.01 | 44104.56 | 41827.48 | 41324.17 |
 
-The assignment includes a helper Web page, `visualizer/index.html`, which
-visualizes your solutions. You need to run a HTTP server on your local machine
-to access the visualizer. Any HTTP server is okay. If you are not sure how to
-run a web server, use the following command to run the HTTP server included in
-the assignment. Make sure that you are in the top directory of the assignment
-before running the command.
+より少ない入れ替えデータ数で、より短い距離を出せるようにしたい。
 
-``` shellsession
-./nocache_server.py # For Python 3
-./nocache_server.py2.py # If you don’t want to install Python3
-```
-
-Then, open a browser and navigate to the
-[http://localhost:8000/visualizer/](http://localhost:8000/visualizer/). Note
-that visualizer was only tested by Google Chrome.  Using the visualizer is
-up-to you. You don’t have to use the visualizer to finish the assignment. The
-visualizer is provided for the purpose of helping you understand the problem.
-
-3. Data Format Specification
-----
-
-### Input Format
-
-The input consists of `N + 1` lines. The first line is always `x,y`. It is followed by `N` lines, each line represents an i-th city’s location, point `xi,yi` where `xi`, `yi` is a floating point number.
-
-```
-x,y
-x_0,y_0
-x_1,y_1
-…
-x_N-1,y_N-1
-```
-
-### Output Format
-
-Output has `N + 1` lines. The first line should be “index”. It is followed by `N` lines, each line is the index of city, which represents the visitation order.
-
-```
-index
-v_0
-v_1
-v_2
-…
-v_N-1
-```
-
-### Example (Challenge 0, N = 5)
-
-Input Example:
-
-```
-x,y
-214.98279057984195,762.6903632435094
-1222.0393903625825,229.56212316547953
-792.6961393471055,404.5419583098643
-1042.5487563564207,709.8510160219619
-150.17533883877582,25.512728869805677
-```
-
-Output (Solution) Example:
-
-```
-index
-0
-2
-3
-1
-4
-```
-
-These formats are requirements for the visualizer, which can take only properly formatted CSV files as input.
-
-5. What’s included in the assignment
-----
-
-To help you understand the problem, there are some sample scripts / resources
-in the assignment, including, but not limited to:
-
-- `solver_random.py` - Sample stupid solver. You never lose to this stupid one.
-- `solution_random_{0-6}.csv` - Sample solutions by solver_random.py.
-- `solver_greedy.py` - Sample solver using the greedy algorithm. You should beat this definitely.
-- `solution_greedy_{0-6}.csv` - Sample solutions by solver_greedy.py.
-- `solution_sa_{0-6}.csv` - Yet another sample solutions. I expect all of you will beat this one too. The solver itself is not included intentionally.
-- `solution_wakanapo_{0-6}.csv` - Sample solutions I solved when I was joined Google STEP 2016.
-- `solution_yours_{0-6}.csv` - You should overwrite these files with your solution.
-- `solution_verifier.py` - Try to validate your solution and print the path length.
-- `input_generator.py` - Python script which was used to create input files, `input_{0-6}.csv`
-- `visualizer/` - The directory for visualizer.
-
-6. Acknowledgments
-----
-この課題は[私](https://github.com/wakanapo)がgoogle step 2016に参加したときにやったものです。問題のわかりやすさ、visualizerによるアルゴリズムのみやすさ、楽しさなどにおいてこれを上回る課題はないと思ったので、Build@Mercariでも採用することにしました。
+[参考文献]: http://codecrafthouse.jp/p/2016/08/traveling-salesman-problem/#opt

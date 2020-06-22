@@ -41,10 +41,10 @@ def improve_with_2opt(visit_order, distance_matrix):
     i_best, j_best = None, None
 
     for i in range(0, n_cities - 2):
-        if i > 600:
+        if i > 1001:
             break
         for j in range(i + 2, n_cities):
-            if j > 600:
+            if j > 1001:
                 break
             if i == 0 and j == n_cities - 1:
                 continue
@@ -70,8 +70,6 @@ def local_search(visit_order, distance_matrix, improve_func):
     while True:
         improved = improve_func(visit_order, distance_matrix)
         if not improved:
-            break
-        if i > 1000:
             break
         i += 1
 
@@ -100,8 +98,7 @@ def solve(df_dist):
     return solution
 
 
-def multi_start(N_START, infile, outfile):
-    df = pd.read_csv(infile)
+def distance(df):
     df_x = pd.DataFrame()
     df_y = pd.DataFrame()
     df_x = df_x.append([df['x']]*len(df), ignore_index=True)
@@ -110,6 +107,12 @@ def multi_start(N_START, infile, outfile):
     df_yt = df_y.T
     df_dist = (df_x-df_xt)**2+(df_y-df_yt)**2
     df_dist = np.sqrt(df_dist)
+    return df_dist
+
+
+def multi_start(N_START, infile, outfile):
+    df = pd.read_csv(infile)
+    df_dist = distance(df)
     distance_matrix = df_dist.values
     N = len(df)
     rtimes = int(N/N_START)
@@ -125,9 +128,9 @@ def multi_start(N_START, infile, outfile):
             score_best = score
             order_best = order_improved
             order_random = order_best
-        order_random = list(np.roll(order_random, rtimes))
-        if i > N:
+        if N < 129:
             order_random = list(np.random.permutation(N))
+        order_random = list(np.roll(order_random, rtimes+1))
 
     with open(outfile, 'w') as f:
         f.write('index'+'\n')
@@ -137,19 +140,20 @@ def multi_start(N_START, infile, outfile):
 
 if __name__ == '__main__':
     start = time.time()
+    N_START = 200
     print('0')
-    multi_start(200, 'input_0.csv', 'solution_yours_0.csv')
+    multi_start(N_START, 'input_0.csv', 'solution_yours_0.csv')
     print('1')
-    multi_start(200, 'input_1.csv', 'solution_yours_1.csv')
+    multi_start(N_START, 'input_1.csv', 'solution_yours_1.csv')
     print('2')
-    multi_start(200, 'input_2.csv', 'solution_yours_2.csv')
+    multi_start(N_START, 'input_2.csv', 'solution_yours_2.csv')
     print('3')
-    multi_start(200, 'input_3.csv', 'solution_yours_3.csv')
+    multi_start(N_START, 'input_3.csv', 'solution_yours_3.csv')
     print('4')
-    multi_start(200, 'input_4.csv', 'solution_yours_4.csv')
+    multi_start(N_START, 'input_4.csv', 'solution_yours_4.csv')
     print('5')
-    multi_start(200, 'input_5.csv', 'solution_yours_5.csv')
+    multi_start(1, 'input_5.csv', 'solution_yours_5.csv')
     print('6')
-    multi_start(200, 'input_6.csv', 'solution_yours_6.csv')
+    multi_start(N_START, 'input_6.csv', 'solution_yours_6.csv')
     elapsed_time = time.time() - start
     print("elapsed_time:{0}".format(elapsed_time) + "[sec]")

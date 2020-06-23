@@ -9,6 +9,23 @@ Build@Mercari 2020 Week4 - Travelling Salesman PRoblem Challenges.
 <h4>アルゴリズム</h4>
 
 2-opt法とgreedyを用いた。  
+**推しポイント**  
+```
+if score < score_best:
+    score_best = score 
+    order_best = order_improved  
+    order_random = order_best
+if N < 129:  
+    order_random = list(np.random.permutation(N))
+order_random = list(np.roll(order_random, 3)) 
+```
+order_random:現在の経路  
+order_best:過去最短の経路  
+通常の2-opt法は全ての入れ替えを考え、より良いスコアが出れば更新するというものだが、全ての入れ替えを考えず、order_randomの頭から○番目の地点のみの入れ替えだけを考え、order_bestを更新することを繰り返すと2-opt法よりも良いスコアが出ることが分かった!!!頭からの地点を考えるため、繰り返す際に経路の頭を変えている。  
+実際、N=512において、512地点全ての入れ替えを考えた時の距離は21150.03 mだったが、order_randomの頭から300地点までの入れ替えのみを考えて、それを800回繰り返すと20935.42 mとなった。
+
+
+
 [参考文献]を見て、2-opt法でまずは書いてみようと思ったが、参考文献のコードをそのまま用いると、計算量が大きすぎてN=2048に対応できなかったため、頂いていたgreedyを同時に用いることにした。  
 2-opt近傍は「初期経路をrandomで与え、2つの経路を入れ替えていくことで最短経路を見つける」というものだ。しかし、入れ替える作業が多いほど計算時間が長くなるため、初期経路をrandomで与えたり、Nが大きくなったりすると計算までにとても時間を要する。  
 まず、初期経路をrandomにすることによる計算量を初期経路にgreedyを与えることで改善させた。greedyの結果を用いると、すでにある程度交差の少ない経路になっているため、入れ替える回数がrandomの経路よりも格段に少なくなる。  

@@ -25,8 +25,8 @@ order_best:過去最短の経路
 実際、N=512において、512地点全ての入れ替えを考えた時の距離は21150.03 mだったが、order_randomの頭から300地点までの入れ替えのみを考えて、それを800回繰り返すと20935.42 mとなった。  
 （更新）  
 少し調べてみた。  
-<img src="https://github.com/mercari-build/HomeWork/blob/master/Week3/IbukiMori/picture/image.png" width="800px">
-<img src="https://github.com/mercari-build/HomeWork/blob/master/Week3/IbukiMori/picture/image2.png" width="800px">
+<img src="https://github.com/ibuki4869/week4-tsp/blob/gh-pages/img/image.png" width="800px">
+<img src="https://github.com/ibuki4869/week4-tsp/blob/gh-pages/img/image2.png" width="800px">
 
 正直どうしてこのような結果になるのかはっきりした原因は私には分かっていないのだが、全てのデータに対して2-optをするのではなく、一部のデータに対して2-optを行っていく方が良い結果が得られることが分かった。
 

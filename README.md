@@ -62,3 +62,7 @@ lombard streetのようにクネクネと点を辿っていくアルゴリズム
 結構実装の仕方が面白いのかな〜と思っています。良かったら見てみてください^^  
 
 <img src="https://github.com/ibuki4869/week4-tsp/blob/gh-pages/img/image3.png" width="800px">
+
+用いたPC  
+プロセッサ：1.3GHz デュアルコアIntel Core i5  
+メモリ：8GB 1867MHz LPDDR3
